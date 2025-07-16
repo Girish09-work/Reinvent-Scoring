@@ -1,0 +1,4 @@
+cd D:\reinvent-scoring                                                                                                                                                                          
+>> python setup.py bdist_wheel
+>> pip uninstall -y reinvent-scoring-rdkit
+>> pip install dist/reinvent_scoring_rdkit-0.0.1-py3-none-any.whl

@@ -1,0 +1,4 @@
+from reinvent_scoring.scoring.score_components.roshambo.roshambo_shape_similarity import RoshamboShapeSimilarity
+from reinvent_scoring.scoring.score_components.roshambo.rdkit_conformer_generator import RoshamboConformerGenerator
+
+__all__ = ["RoshamboShapeSimilarity", "RoshamboConformerGenerator"]

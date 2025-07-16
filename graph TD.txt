@@ -1,0 +1,68 @@
+graph TD
+    A[SMILES Input] --> B[docker.py Entry Point]
+    B --> C[Configuration Loading]
+    C --> D[AutodockVina Class Init]
+    D --> E[Ligand Preparation]
+    
+    E --> E1[RDKit Processing]
+    E --> E2[Conformer Generation]
+    E --> E3[Protonation State]
+    
+    E1 --> F[File Format Conversion]
+    E2 --> F
+    E3 --> F
+    
+    F --> F1[SMILES → SDF]
+    F --> F2[SDF → PDB]
+    F --> F3[PDB → PDBQT]
+    
+    F1 --> G[Parallelization Setup]
+    F2 --> G
+    F3 --> G
+    
+    G --> G1[Split Ligands into Sublists]
+    G --> G2[Create Temporary Files]
+    G --> G3[Generate Process Arguments]
+    
+    G1 --> H[Parallel Execution]
+    G2 --> H
+    G3 --> H
+    
+    H --> H1[Process 1: Vina Subjob]
+    H --> H2[Process 2: Vina Subjob]
+    H --> H3[Process N: Vina Subjob]
+    
+    H1 --> I[AutoDock Vina Execution]
+    H2 --> I
+    H3 --> I
+    
+    I --> I1[Load Receptor PDBQT]
+    I --> I2[Define Search Space]
+    I --> I3[Execute Docking]
+    I --> I4[Generate Poses]
+    
+    I1 --> J[Result Processing]
+    I2 --> J
+    I3 --> J
+    I4 --> J
+    
+    J --> J1[PDBQT → SDF Conversion]
+    J --> J2[Score Extraction]
+    J --> J3[Pose Ranking]
+    
+    J1 --> K[Output Generation]
+    J2 --> K
+    J3 --> K
+    
+    K --> K1[SDF Poses File]
+    K --> K2[CSV Scores File]
+    K --> K3[Cleanup Temp Files]
+    
+    K1 --> L[Final Output]
+    K2 --> L
+    K3 --> L
+    
+    style A fill:#e1f5fe
+    style B fill:#f3e5f5
+    style I fill:#fff3e0
+    style L fill:#e8f5e8

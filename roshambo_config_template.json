@@ -1,0 +1,51 @@
+{
+  "component_type": "roshambo_shape_similarity",
+  "name": "Roshambo Shape Similarity",
+  "weight": 1.0,
+  "specific_parameters": {
+    "_comment_required": "The following parameters are REQUIRED for Roshambo to work:",
+    
+    "rdbase_path": "/home/protacinvent/Desktop/roshambo/rdkit",
+    "_comment_rdbase": "Path to your RDKit build directory. Update this for your system.",
+    
+    "conda_env_name": "roshambo",
+    "_comment_conda_env": "Name of conda environment with Roshambo installed. Update this for your system.",
+    
+    "reference_file": "/home/protacinvent/Desktop/Getting Started/protac-invent/Protac-invent/data/protac/BTK/BTK_sel.sdf",
+    "_comment_ref_file": "Path to reference SDF file. Update this for your system.",
+    
+    "_comment_optional": "The following parameters are optional:",
+    
+    "conda_base_path": "/home/protacinvent/.conda",
+    "_comment_conda_base": "Path to conda installation. Leave as null for auto-detection.",
+    
+    "cuda_home_path": "/usr/local/cuda",
+    "_comment_cuda": "Path to CUDA installation.",
+    
+    "auto_setup_env": true,
+    "_comment_auto_setup": "Automatically setup environment variables.",
+    
+    "shape_weight": 0.6,
+    "color_weight": 0.4,
+    "_comment_weights": "Weights for shape and color similarity (should sum to 1.0).",
+    
+    "n_confs": 0,
+    "_comment_n_confs": "Number of conformers to generate. 0 means use existing conformers.",
+    
+    "ignore_hs": true,
+    "use_carbon_radii": true,
+    "gpu_id": 0,
+    
+    "save_overlays": false,
+    "overlays_dir": "roshambo_overlays",
+    "_comment_overlays": "Set save_overlays to true to save molecular overlays.",
+    
+    "debug": true,
+    "_comment_debug": "Enable debug output to help diagnose issues.",
+    
+    "_comment_protac": "For PROTAC design, you can also specify multiple reference files:",
+    "warhead1_reference": "",
+    "warhead2_reference": "",
+    "_comment_warheads": "Paths to warhead reference files (optional)."
+  }
+}

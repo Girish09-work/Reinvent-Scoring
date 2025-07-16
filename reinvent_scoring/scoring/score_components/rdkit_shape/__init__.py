@@ -1,0 +1,4 @@
+
+from reinvent_scoring.scoring.score_components.rdkit_shape.rdkit_shape_similarity import RDKitShapeSimilarity
+from reinvent_scoring.scoring.score_components.rdkit_shape.parallel_rdkit_shape_similarity import ParallelRDKitShapeSimilarity
+

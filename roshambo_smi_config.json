@@ -1,0 +1,19 @@
+{
+  "component_type": "roshambo_shape_similarity",
+  "name": "roshambo_scorer",
+  "weight": 1.0,
+  "specific_parameters": {
+    "reference_file": "path/to/reference.sdf",
+    "file_format": "smi",
+    "n_confs": 50,
+    "shape_weight": 0.5,
+    "color_weight": 0.5,
+    "ignore_hs": true,
+    "use_carbon_radii": true,
+    "gpu_id": 0,
+    "roshambo_api_url": "http://127.0.0.1:5000",
+    "save_overlays": true,
+    "overlays_dir": "roshambo_overlays",
+    "debug": true
+  }
+}

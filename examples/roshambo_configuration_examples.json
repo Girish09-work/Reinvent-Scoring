@@ -1,0 +1,231 @@
+{
+  "basic_roshambo_example": {
+    "component_type": "roshambo_shape_similarity",
+    "name": "Roshambo Shape Similarity",
+    "weight": 1.0,
+    "specific_parameters": {
+      "reference_file": "path/to/reference.sdf",
+      "rdbase_path": "/home/user/Desktop/roshambo/rdkit",
+      "conda_env_name": "roshambo",
+      "shape_weight": 0.6,
+      "color_weight": 0.4,
+      "n_confs": 10,
+      "ignore_hs": true,
+      "use_carbon_radii": true,
+      "gpu_id": 0,
+      "save_overlays": false
+    }
+  },
+
+  "roshambo_with_dynamic_environment": {
+    "component_type": "roshambo_shape_similarity",
+    "name": "Roshambo with Dynamic Environment",
+    "weight": 1.0,
+    "specific_parameters": {
+      "reference_file": "path/to/reference.sdf",
+      "rdbase_path": "/home/user/Desktop/roshambo/rdkit",
+      "conda_env_name": "roshambo",
+      "conda_base_path": "/home/protacinvent/.conda",
+      "cuda_home_path": "/usr/local/cuda",
+      "auto_setup_env": true,
+      "shape_weight": 0.6,
+      "color_weight": 0.4,
+      "n_confs": 10,
+      "debug": true,
+      "gpu_id": 0
+    }
+  },
+
+  "roshambo_custom_paths": {
+    "component_type": "roshambo_shape_similarity",
+    "name": "Roshambo with Custom Paths",
+    "weight": 1.0,
+    "specific_parameters": {
+      "reference_file": "path/to/reference.sdf",
+      "rdbase_path": "/custom/path/to/rdkit",
+      "conda_env_name": "my_roshambo_env",
+      "conda_base_path": "/home/user/miniconda3",
+      "cuda_home_path": "/usr/local/cuda-12.0",
+      "auto_setup_env": true,
+      "shape_weight": 0.6,
+      "color_weight": 0.4,
+      "n_confs": 15,
+      "debug": true
+    }
+  },
+
+  "roshambo_minimal_required": {
+    "component_type": "roshambo_shape_similarity",
+    "name": "Roshambo Minimal Required Configuration",
+    "weight": 1.0,
+    "specific_parameters": {
+      "reference_file": "path/to/reference.sdf",
+      "rdbase_path": "/home/user/Desktop/roshambo/rdkit",
+      "conda_env_name": "roshambo",
+      "shape_weight": 0.6,
+      "color_weight": 0.4,
+      "n_confs": 10,
+      "debug": true,
+      "gpu_id": 0
+    }
+  },
+
+  "protac_roshambo_example": {
+    "component_type": "roshambo_shape_similarity",
+    "name": "PROTAC Roshambo Shape Similarity",
+    "weight": 1.0,
+    "specific_parameters": {
+      "reference_file": "D:\\protac-invent\\Protac-invent\\data\\protac\\BRD9\\protac.sdf",
+      "warhead1_reference": "D:\\protac-invent\\Protac-invent\\data\\protac\\BRD9\\warhead1.sdf",
+      "warhead2_reference": "D:\\protac-invent\\Protac-invent\\data\\protac\\BTK\\BTK_sel.sdf",
+      "rdbase_path": "/home/protacinvent/Desktop/roshambo/rdkit",
+      "conda_env_name": "roshambo",
+      "conda_base_path": "/opt/conda",
+      "auto_setup_env": true,
+      "shape_weight": 0.6,
+      "color_weight": 0.4,
+      "n_confs": 20,
+      "ignore_hs": true,
+      "use_carbon_radii": true,
+      "gpu_id": 0,
+      "save_overlays": true,
+      "overlays_dir": "D:\\protac-invent\\Protac-invent\\data\\protac\\BRD9\\roshambo_overlays",
+      "overlay_prefix": "protac_overlay",
+      "debug": true
+    }
+  },
+
+  "protac_roshambo_with_env_path": {
+    "component_type": "roshambo_shape_similarity",
+    "name": "PROTAC Roshambo with Environment Path",
+    "weight": 1.0,
+    "specific_parameters": {
+      "reference_file": "/home/protacinvent/Desktop/Getting Started/protac-invent/Protac-invent/data/protac/BRD9/protac.sdf",
+      "warhead1_reference": "/home/protacinvent/Desktop/Getting Started/protac-invent/Protac-invent/data/protac/BRD9/warhead1.sdf",
+      "warhead2_reference": "/home/protacinvent/Desktop/Getting Started/protac-invent/Protac-invent/data/protac/BTK/BTK_sel.sdf",
+      "environment_path": "conda activate roshambo && export RDBASE=/home/protacinvent/Desktop/roshambo/rdkit && export PYTHONPATH=$RDBASE && export LD_LIBRARY_PATH=$RDBASE/lib:$CONDA_PREFIX/lib && export RDKIT_LIB_DIR=$RDBASE/lib && export RDKIT_INCLUDE_DIR=$RDBASE/Code && export RDKIT_DATA_DIR=$RDBASE/Data && export PYTHONPATH=$PYTHONPATH:$RDBASE &&",
+      "shape_weight": 0.6,
+      "color_weight": 0.4,
+      "n_confs": 20,
+      "ignore_hs": true,
+      "use_carbon_radii": true,
+      "gpu_id": 0,
+      "save_overlays": true,
+      "overlays_dir": "/home/protacinvent/Desktop/Getting Started/protac-invent/Protac-invent/data/protac/BRD9/roshambo_overlays",
+      "overlay_prefix": "protac_overlay",
+      "debug": true
+    }
+  },
+
+  "parallel_roshambo_example": {
+    "component_type": "parallel_roshambo_shape_similarity",
+    "name": "Parallel Roshambo Shape Similarity",
+    "weight": 1.0,
+    "specific_parameters": {
+      "reference_file": "path/to/reference.sdf",
+      "rdbase_path": "/home/user/Desktop/roshambo/rdkit",
+      "conda_env_name": "roshambo",
+      "shape_weight": 0.6,
+      "color_weight": 0.4,
+      "n_confs": 10,
+      "max_gpus": 2,
+      "gpu_ids": [0, 1],
+      "ignore_hs": true,
+      "use_carbon_radii": true,
+      "save_overlays": false,
+      "debug": true
+    }
+  },
+
+  "rdkit_conformer_roshambo": {
+    "component_type": "roshambo_shape_similarity",
+    "name": "Roshambo with RDKit Conformers",
+    "weight": 1.0,
+    "specific_parameters": {
+      "reference_file": "path/to/reference.sdf",
+      "rdbase_path": "/home/user/Desktop/roshambo/rdkit",
+      "conda_env_name": "roshambo",
+      "shape_weight": 0.6,
+      "color_weight": 0.4,
+      "n_confs": 50,
+      "rdkit_method": "ETKDGv3",
+      "rdkit_random_seed": 42,
+      "rdkit_ff": "MMFF94s",
+      "rdkit_add_hs": true,
+      "rdkit_opt_confs": true,
+      "rdkit_num_threads": 4,
+      "gpu_id": 0
+    }
+  },
+
+  "advanced_roshambo_example": {
+    "component_type": "roshambo_shape_similarity",
+    "name": "Advanced Roshambo Configuration",
+    "weight": 1.0,
+    "specific_parameters": {
+      "reference_file": "path/to/reference.sdf",
+      "rdbase_path": "/home/user/Desktop/roshambo/rdkit",
+      "conda_env_name": "roshambo",
+      "conda_base_path": "/opt/conda",
+      "cuda_home_path": "/usr/local/cuda",
+      "shape_weight": 0.7,
+      "color_weight": 0.3,
+      "n_confs": 30,
+      "ignore_hs": false,
+      "use_carbon_radii": true,
+      "gpu_id": 0,
+      "volume_type": "analytic",
+      "epsilon": 0.1,
+      "res": 0.4,
+      "margin": 0.4,
+      "sort_by": "ComboTanimoto",
+      "save_overlays": true,
+      "overlays_dir": "roshambo_results",
+      "overlay_prefix": "similarity",
+      "write_to_file": true,
+      "max_conformers": 5,
+      "filename": "hits.sdf",
+      "fdef_path": "path/to/feature_definition.fdef"
+    }
+  },
+
+  "complete_scoring_function_example": {
+    "name": "custom_product",
+    "parallel": true,
+    "parameters": [
+      {
+        "component_type": "roshambo_shape_similarity",
+        "name": "Shape Similarity",
+        "weight": 2.0,
+        "specific_parameters": {
+          "reference_file": "path/to/reference.sdf",
+          "rdbase_path": "/home/user/Desktop/roshambo/rdkit",
+          "conda_env_name": "roshambo",
+          "shape_weight": 0.6,
+          "color_weight": 0.4,
+          "n_confs": 20,
+          "gpu_id": 0,
+          "save_overlays": true,
+          "overlays_dir": "shape_overlays"
+        }
+      },
+      {
+        "component_type": "tanimoto_similarity",
+        "name": "Tanimoto Similarity",
+        "weight": 1.0,
+        "specific_parameters": {
+          "smiles": ["CCO", "CCC"],
+          "radius": 3,
+          "use_counts": true,
+          "use_features": true
+        }
+      },
+      {
+        "component_type": "qed_score",
+        "name": "QED Score",
+        "weight": 1.0,
+        "specific_parameters": {}
+      }
+    ]
+  }
+}

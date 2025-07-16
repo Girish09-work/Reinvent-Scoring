@@ -1,0 +1,22 @@
+{
+    "component_type": "parallel_roshambo_shape_similarity",
+    "name": "Parallel Roshambo Shape Similarity",
+    "weight": 1.0,
+    "specific_parameters": {
+        "reference_file": "D:\\protac-invent\\Protac-invent\\data\\protac\\BRD9\\protac.sdf",
+        "shape_weight": 0.6,
+        "color_weight": 0.4,
+        "n_confs": 0,
+        "ignore_hs": true,
+        "use_carbon_radii": true,
+        
+        "max_gpus": 4,
+        "gpu_ids": [0, 1, 2, 3],
+        
+        "save_overlays": true,
+        "overlays_dir": "D:\\protac-invent\\Protac-invent\\data\\protac\\BRD9\\roshambo_overlays",
+        
+        "warhead1_reference": "D:\\protac-invent\\Protac-invent\\data\\protac\\BRD9\\warhead2_xuxiang.sdf",
+        "warhead2_reference": "D:\\protac-invent\\Protac-invent\\data\\protac\\BTK\\BTK_sel.sdf"
+    }
+}

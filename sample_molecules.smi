@@ -1,0 +1,5 @@
+CN[C@@H](C)C(=O)N[C@@H](C(C)(C)C)C(=O)N1Cc2cc(OCc3ccc(C=CC(=O)NC(=O)N4CCCC(n5nc(-c6ccc(Oc7ccc(F)cc7F)cc6)c(C(N)=O)c5N)C4)cc3)ccc2CC1C(=O)NC1CCCc2ccccc21
+CNC(C)C(=O)NC(C(=O)N1Cc2cc(OCCc3nc(NCCNC(=O)N4CCCC(n5nc(-c6ccc(Oc7ccc(F)cc7F)cc6)c(C(N)=O)c5N)C4)n(C)c3C)ccc2CC1C(=O)NC1CCCc2ccccc21)C(C)(C)C
+CNC(C)C(=O)NC(C(=O)N1Cc2cc(OCC(=O)NCc3cc(F)c(NC(=O)N4CCCC(n5nc(-c6ccc(Oc7ccc(F)cc7F)cc6)c(C(N)=O)c5N)C4)cc3Cl)ccc2CC1C(=O)NC1CCCc2ccccc21)C(C)(C)C
+CNC(C)C(=O)NC(C(=O)N1Cc2cc(OCCc3ccc4c(c3)CCC(NC(=O)N3CCCC(n5nc(-c6ccc(Oc7ccc(F)cc7F)cc6)c(C(N)=O)c5N)C3)C4)ccc2CC1C(=O)NC1CCCc2ccccc21)C(C)(C)C
+CNC(C)C(=O)NC(C(=O)N1Cc2cc(OCCNc3ccc4c(c3)CC(NC(=O)N3CCCC(n5nc(-c6ccc(Oc7ccc(F)cc7F)cc6)c(C(N)=O)c5N)C3)CC4)ccc2CC1C(=O)NC1CCCc2ccccc21)C(C)(C)C

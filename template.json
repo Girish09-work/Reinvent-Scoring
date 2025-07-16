@@ -1,0 +1,146 @@
+{
+    "version": 3,
+    "model_type": "link_invent",
+    "run_type": "reinforcement_learning",
+    "logging": {
+        "sender": "",
+        "recipient": "local",
+        "logging_path": "/home/protacinvent/Desktop/Getting Started/ReinventCommunity/notebooks/results-LinkInvent/tb_logs/NFP-08",
+        "result_folder": "/home/protacinvent/Desktop/Getting Started/ReinventCommunity/notebooks/results-LinkInvent/results/NFP-08",
+        "job_name": "Link-INVENT RL Demo",
+        "job_id": "N/A"
+    },
+    "parameters": {
+        "actor": "/home/protacinvent/Desktop/Getting Started/ReinventCommunity/notebooks/models/linkinvent.prior",
+        "critic": "/home/protacinvent/Desktop/Getting Started/ReinventCommunity/notebooks/models/linkinvent.prior",
+        "warheads": [
+           "*c1cnc[nH]1|*N1CCOCC1"
+        ],
+        "n_steps": 100,
+        "learning_rate": 0.0001,
+        "batch_size": 128,
+        "randomize_warheads": true,
+        "learning_strategy": {
+            "name": "dap",
+            "parameters": {
+                "sigma": 120
+            }
+        },
+        "scoring_strategy": {
+            "name": "link_invent",
+            "diversity_filter": {
+                "bucket_size": 20,
+                "minscore": 0.4,
+                "minsimilarity": 0.4,
+                "name": "NoFilterWithPenalty"
+            },
+            "scoring_function": {
+                "name": "custom_product",
+                "parallel": false,
+                "parameters": [
+                    {
+                        "weight": 1,
+                        "component_type": "linker_num_hbd",
+                        "name": "Linker Num HBD",
+                        "specific_parameters": {
+                            "transformation": {
+                                "high": 6,
+                                "low": 0,
+                                "transformation_type": "reverse_sigmoid",
+                                "k": 0.15
+                            }
+                        }
+                    },
+                    {
+                        "weight": 1,
+                        "component_type": "linker_num_rings",
+                        "name": "Linker Num Rings",
+                        "specific_parameters": {
+                            "transformation": {
+                                "high": 1,
+                                "low": 1,
+                                "transformation_type": "step"
+                            }
+                        }
+                    },
+                    {
+                        "weight": 2.0,
+                        "component_type": "roshambo_shape_similarity",
+                        "name": "Roshambo Shape Similarity",
+                        "specific_parameters": {
+                            "_comment_mandatory": "REQUIRED: rdbase_path and conda_env_name must be specified",
+                            "reference_file": "D:\\protac-invent\\Protac-invent\\data\\protac\\BRD9\\protac.sdf",
+                            "warhead1_reference": "D:\\protac-invent\\Protac-invent\\data\\protac\\BRD9\\warhead1.sdf",
+                            "warhead2_reference": "D:\\protac-invent\\Protac-invent\\data\\protac\\BTK\\BTK_sel.sdf",
+                            "rdbase_path": "/home/protacinvent/Desktop/roshambo/rdkit",
+                            "conda_env_name": "roshambo",
+                            "_comment_optional": "Optional parameters with defaults",
+                            "conda_base_path": "/home/protacinvent/.conda",
+                            "cuda_home_path": "/usr/local/cuda",
+                            "auto_setup_env": true,
+                            "_comment_roshambo": "Roshambo-specific parameters",
+                            "shape_weight": 0.6,
+                            "color_weight": 0.4,
+                            "n_confs": 20,
+                            "ignore_hs": true,
+                            "use_carbon_radii": true,
+                            "gpu_id": 0,
+                            "_comment_output": "Output and overlay settings",
+                            "save_overlays": true,
+                            "overlays_dir": "D:\\protac-invent\\Protac-invent\\data\\protac\\BRD9\\roshambo_overlays",
+                            "overlay_prefix": "protac_overlay",
+                            "_comment_rdkit": "RDKit conformer generation settings",
+                            "rdkit_method": "ETKDGv3",
+                            "rdkit_ff": "MMFF94s",
+                            "rdkit_opt_confs": true,
+                            "rdkit_num_threads": 2,
+                            "_comment_debug": "Debug and monitoring",
+                            "debug": true,
+                            "transformation": {
+                                "transformation_type": "sigmoid",
+                                "high": 1.0,
+                                "low": 0.0,
+                                "k": 0.25
+                            }
+                        }
+                    },
+                    {
+                        "component_type": "dockstream",
+                        "name": "ADV",
+                        "weight": 1,
+                        "specific_parameters": {
+                            "transformation": {
+                                "transformation_type": "reverse_sigmoid",
+                                "low": -10,
+                                "high": 0,
+                                "k": 0.25
+                            },
+                            "configuration_path": "/data/baiqing/PycharmProjects/DockStream-master/result/BTK/BTK_docking_weight1_contain_oxygen_bond_distance_aromatic_linkinvent_7_9_3_product.json",
+                            "docker_script_path": "/data/baiqing/PycharmProjects/DockStream-master/docker.py",
+
+                            "environment_path": "/home/baiqing/anaconda3/envs/DockStream/bin/python"
+                        }
+                    },
+                    {
+                        "component_type": "docked_parallel_rocs_similarity",
+                        "name": "PostDock Tanimoto ROCS sim",
+                        "specific_parameters": {
+                            "shape_weight": 1.0,
+                            "color_weight": 0.0,
+                            "enumerate_stereo": true,
+                            "input_type": "sdf",
+                            "max_num_cpus": 120,
+                            "rocs_input": "/data/baiqing/PycharmProjects/Reinvent-master-3.2/data/protac/BTK/warheads_contain_oxygen.sdf",
+                            "similarity_measure": "Tanimoto",
+                            "transformation": {
+                                "transformation_type": "no_transformation"
+                            },
+                            "docked_poses_path": "/data/baiqing/PycharmProjects/DockStream-master/result/BTK/docked_result_docking_weight1_custom_product_contain_oxygen_bond_distance_aromatic_linkinvent_7_9_3"
+                        },
+                        "weight": 1
+                    }
+                ]
+            }
+        }
+    }
+}

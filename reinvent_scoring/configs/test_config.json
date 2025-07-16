@@ -1,0 +1,25 @@
+{
+  "DEVELOPMENT_ENVIRONMENT": false,
+  "MAIN_TEST_PATH": "tmp_test_folder",
+  "COMPONENT_SPECIFIC": {
+    "AZDOCK": {
+      "AZDOCK_DOCKER_SCRIPT_PATH": "",
+      "AZDOCK_ENV_PATH": "",
+      "AZDOCK_DEBUG": false
+    },
+    "DOCKSTREAM": {
+      "DOCKSTREAM_DOCKER_SCRIPT_PATH": "",
+      "DOCKSTREAM_ENV_PATH": "",
+      "DOCKSTREAM_DEBUG": false
+    },
+    "ICOLOS": {
+      "ICOLOS_EXECUTOR_PATH": "",
+      "ICOLOS_DEBUG": false
+    }
+  },
+  "ENVIRONMENTAL_VARIABLES": {
+    "PIP_URL": "",
+    "PIP_KEY": "",
+    "PIP_GET_RESULTS": ""
+  }
+}

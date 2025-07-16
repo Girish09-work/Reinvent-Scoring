@@ -1,0 +1,45 @@
+{
+    "logging": {
+        "job_id": "scaffold_csv_demo",
+        "job_name": "Protac-invent with Scaffold CSV Generation",
+        "logging_path": "scaffold_csv_demo.log",
+        "recipient": "local",
+        "sender": "http://127.0.0.1"
+    },
+    "model_type": "link-invent",
+    "parameters": {
+        "scoring": {
+            "input": "sample_molecules.smi"
+        },
+        "scoring_function": {
+            "name": "custom_sum",
+            "parameters": [
+                {
+                    "component_type": "roshambo_shape_similarity",
+                    "name": "Roshambo Shape Similarity",
+                    "weight": 1.0,
+                    "specific_parameters": {
+                        "reference_file": "D:\\protac-invent\\Protac-invent\\data\\protac\\BRD9\\protac.sdf",
+                        "shape_weight": 0.6,
+                        "color_weight": 0.4,
+                        "n_confs": 0,
+                        "ignore_hs": true,
+                        "use_carbon_radii": true,
+                        "gpu_id": 0,
+                        "rdbase_path": "/home/protacinvent/Desktop/roshambo/rdkit",
+                        "conda_env_name": "roshambo",
+                        "conda_base_path": "/home/protacinvent/.conda",
+                        "cuda_home_path": "/usr/local/cuda",
+                        "auto_setup_env": true,
+                        "debug": true,
+                        "save_scaffold_csv": true,
+                        "scaffold_csv_path": "scaffold.csv",
+                        "scaffold_min_score": 0.1
+                    }
+                }
+            ]
+        }
+    },
+    "run_type": "scoring",
+    "version": 3
+}
