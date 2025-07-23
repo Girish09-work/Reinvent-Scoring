@@ -31,6 +31,7 @@ class DockStream(BaseStructuralComponent):
 
         # check, if DockStream is to be executed in debug mode, which will cause its loggers to print out
         # much more detailed information
+        # print(command)
         command = self._add_debug_mode_if_selected(command)
         return command
 
