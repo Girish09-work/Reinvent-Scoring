@@ -70,3 +70,6 @@ class ScoringFunctionComponentNameEnum:
 
     # Add Roshambo shape components
     ROSHAMBO_SHAPE_SIMILARITY = "roshambo_shape_similarity"
+
+    # PostDock Roshambo over docked poses
+    DOCKED_PARALLEL_ROSHAMBO_SIMILARITY = "docked_parallel_roshambo_similarity"

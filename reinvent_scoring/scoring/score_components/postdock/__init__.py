@@ -1,0 +1,2 @@
+from reinvent_scoring.scoring.score_components.postdock.postdock_shape_similarity import PostDockShapeSimilarity
+

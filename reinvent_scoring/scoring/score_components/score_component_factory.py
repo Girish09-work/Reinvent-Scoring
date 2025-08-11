@@ -19,6 +19,9 @@ from reinvent_scoring.scoring.score_components.rdkit_shape import RDKitShapeSimi
 # Import the Roshambo shape components
 from reinvent_scoring.scoring.score_components.roshambo import RoshamboShapeSimilarity
 
+# PostDock components
+from reinvent_scoring.scoring.score_components.postdock import PostDockShapeSimilarity
+
 from reinvent_scoring.scoring.score_components.rest.general_rest_component import GeneralRESTComponent
 
 from reinvent_scoring.scoring.score_components.console_invoked import Icolos
@@ -88,6 +91,7 @@ class ScoreComponentFactory:
             enum.RDKIT_SHAPE_SIMILARITY: RDKitShapeSimilarity,
             enum.PARALLEL_RDKIT_SHAPE_SIMILARITY: ParallelRDKitShapeSimilarity,
             enum.ROSHAMBO_SHAPE_SIMILARITY: RoshamboShapeSimilarity,
+            enum.DOCKED_PARALLEL_ROSHAMBO_SIMILARITY: PostDockShapeSimilarity,
         }
         return component_map
 
