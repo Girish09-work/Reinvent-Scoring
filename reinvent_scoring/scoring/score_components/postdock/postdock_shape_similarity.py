@@ -182,26 +182,39 @@ class PostDockShapeSimilarity(BaseScoreComponent):
         return [0.0] * expected_count
 
     def _extract_scores_from_csv(self, csv_file: str, expected_count: int) -> List[float]:
-        """Parse Roshambo CSV and map best score per molecule index (mol_i)."""
+        """Parse Roshambo CSV and map best score per molecule index.
+        Supports OriginalName patterns like:
+          - mol_12, mol_12_...
+          - lig_79, lig_79:0:0_warhead_0
+          - pose_42, pose_42_...
+        Falls back to the Molecule column if OriginalName is missing/unexpected.
+        """
         try:
             df = pd.read_csv(csv_file, sep='\t')
-            # Prefer explicit columns, fallback if missing
+
+            # Compute a score column
             if {"OriginalName", "ShapeTanimoto", "ColorTanimoto"}.issubset(df.columns):
                 df["score"] = df["ShapeTanimoto"] * self.shape_weight + df["ColorTanimoto"] * self.color_weight
             elif {"OriginalName", "ComboTanimoto"}.issubset(df.columns):
-                # Use provided combo if shape/color split not present
                 df["score"] = df["ComboTanimoto"].astype(float)
+            elif {"Molecule", "ShapeTanimoto", "ColorTanimoto"}.issubset(df.columns):
+                df["score"] = df["ShapeTanimoto"] * self.shape_weight + df["ColorTanimoto"] * self.color_weight
+                df.rename(columns={"Molecule": "OriginalName"}, inplace=True)
+            elif {"Molecule", "ComboTanimoto"}.issubset(df.columns):
+                df["score"] = df["ComboTanimoto"].astype(float)
+                df.rename(columns={"Molecule": "OriginalName"}, inplace=True)
             else:
                 if self.debug:
                     print(f"[PostDock] Unexpected CSV columns: {list(df.columns)}")
                 return [0.0] * expected_count
 
-            # Extract index from names like 'mol_12_...' or 'mol_12'
+            # Robust index extraction: mol_X, lig_X, pose_X at start of OriginalName
+            pat = re.compile(r'^(?:mol|lig|pose)_(\d+)')
             def to_index(name: str) -> Optional[int]:
-                if isinstance(name, str) and name.startswith("mol_"):
-                    parts = name.split("_")
-                    if len(parts) >= 2 and parts[1].isdigit():
-                        return int(parts[1])
+                if isinstance(name, str):
+                    m = pat.match(name)
+                    if m:
+                        return int(m.group(1))
                 return None
 
             df["mol_index"] = df["OriginalName"].map(to_index)

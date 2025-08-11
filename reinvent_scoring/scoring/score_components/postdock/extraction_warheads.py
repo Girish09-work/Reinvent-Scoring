@@ -7,7 +7,7 @@ Copyright (c) 2025
 """
 
 import os
-from typing import List, Tuple, Dict
+from typing import List, Tuple, Dict, Optional
 
 from rdkit import Chem
 from rdkit.Chem import rdFMCS
@@ -90,9 +90,36 @@ def attempt_valence_repair(mol: Chem.Mol) -> Chem.Mol:
     try:
         Chem.SanitizeMol(mol)
     except Exception as exc:
-        # Leave molecule in semi-sanitized state; substructure search will still work.
-        print(f"   ↳  residual problem ({exc}); proceeding with unsanitized mol")
+        # Try dearomatized copy to avoid 'non-ring atom aromatic' errors
+        try:
+            mol2 = _dearomatize_copy(mol)
+            Chem.SanitizeMol(mol2)
+            return mol2
+        except Exception:
+            # Leave molecule in semi-sanitized state; substructure search will still work.
+            print(f"   ↳  residual problem ({exc}); proceeding with unsanitized mol")
     return mol
+
+
+# --------------------------------------------------------------------------- #
+# 2+.  Aromaticity rescue helpers                                              #
+# --------------------------------------------------------------------------- #
+
+def _dearomatize_copy(mol: Chem.Mol) -> Chem.Mol:
+    """Return a copy with aromatic flags cleared to avoid 'non-ring atom aromatic' errors."""
+    m = Chem.Mol(mol)
+    for atom in m.GetAtoms():
+        if atom.GetIsAromatic():
+            atom.SetIsAromatic(False)
+    for bond in m.GetBonds():
+        if bond.GetIsAromatic():
+            bond.SetIsAromatic(False)
+    try:
+        Chem.Kekulize(m, clearAromaticFlags=True)
+    except Exception:
+        # If Kekulize fails, still return the flag-cleared molecule
+        pass
+    return m
 
 
 # --------------------------------------------------------------------------- #
@@ -157,21 +184,54 @@ def find_warhead_matches(whole: Chem.Mol,
 # --------------------------------------------------------------------------- #
 # 5.  Coordinate-Preserving Extraction                                        #
 # --------------------------------------------------------------------------- #
+# def extract_fragment(parent: Chem.Mol,
+#                      atom_indices: Tuple[int]) -> Chem.Mol:
+#     """
+#     Build a new ROMol consisting solely of the indices in 'atom_indices',
+#     retain exact 3-D coordinates.
+#     """
+#     emol = Chem.EditableMol(Chem.Mol())                                 # start empty
+#     old2new = {}
+
+#     # 5-A: copy atoms
+#     for idx in atom_indices:
+#         new_idx = emol.AddAtom(parent.GetAtomWithIdx(idx))
+#         old2new[idx] = new_idx
+
+#     # 5-B: copy bonds among kept atoms
+#     for i, ai in enumerate(atom_indices):
+#         for aj in atom_indices[i + 1:]:
+#             bond = parent.GetBondBetweenAtoms(ai, aj)
+#             if bond:
+#                 emol.AddBond(old2new[ai], old2new[aj], bond.GetBondType())
+
+#     frag = emol.GetMol()
+
+#     # 5-C: transfer coordinates verbatim
+#     if parent.GetNumConformers():
+#         pconf = parent.GetConformer()
+#         conf = Chem.Conformer(frag.GetNumAtoms())
+#         for new_idx, old_idx in enumerate(atom_indices):
+#             conf.SetAtomPosition(new_idx, pconf.GetAtomPosition(old_idx))
+#         frag.AddConformer(conf, assignId=True)
+
+#     return frag
+
 def extract_fragment(parent: Chem.Mol,
                      atom_indices: Tuple[int]) -> Chem.Mol:
     """
     Build a new ROMol consisting solely of the indices in 'atom_indices',
     retain exact 3-D coordinates.
     """
-    emol = Chem.EditableMol(Chem.Mol())                                 # start empty
+    emol = Chem.EditableMol(Chem.Mol())  # start empty
     old2new = {}
 
-    # 5-A: copy atoms
+    # Copy atoms
     for idx in atom_indices:
         new_idx = emol.AddAtom(parent.GetAtomWithIdx(idx))
         old2new[idx] = new_idx
 
-    # 5-B: copy bonds among kept atoms
+    # Copy bonds among kept atoms
     for i, ai in enumerate(atom_indices):
         for aj in atom_indices[i + 1:]:
             bond = parent.GetBondBetweenAtoms(ai, aj)
@@ -180,7 +240,7 @@ def extract_fragment(parent: Chem.Mol,
 
     frag = emol.GetMol()
 
-    # 5-C: transfer coordinates verbatim
+    # Transfer coordinates
     if parent.GetNumConformers():
         pconf = parent.GetConformer()
         conf = Chem.Conformer(frag.GetNumAtoms())
@@ -188,9 +248,13 @@ def extract_fragment(parent: Chem.Mol,
             conf.SetAtomPosition(new_idx, pconf.GetAtomPosition(old_idx))
         frag.AddConformer(conf, assignId=True)
 
-    return frag
+    # ✅ Explicitly create a new RDKit Mol object for safety
+    frag_copy = Chem.Mol(frag)
 
+    # ✅ Attempt valence repair on the new molecule
+    frag_fixed = attempt_valence_repair(frag_copy)
 
+    return frag_fixed
 # --------------------------------------------------------------------------- #
 # 6+.  Production-friendly API                                                #
 # --------------------------------------------------------------------------- #
@@ -224,7 +288,11 @@ def extract_warheads_to_file(
 
     extracted = []
     for mol, name, props in protacs:
+        # Attempt matching on the original; if no hits, try a dearomatized copy
         hits = find_warhead_matches(mol, refs, mcs_fallback=mcs_fallback, mcs_threshold=mcs_threshold)
+        if not hits:
+            mol = _dearomatize_copy(mol)
+            hits = find_warhead_matches(mol, refs, mcs_fallback=mcs_fallback, mcs_threshold=mcs_threshold)
         for ref_idx, atom_tuple in hits:
             frag = extract_fragment(mol, atom_tuple)
             extracted.append((name, frag, ref_idx, props))
@@ -238,11 +306,40 @@ def extract_warheads_to_file(
 # 6.  Output Writer                                                           #
 # --------------------------------------------------------------------------- #
 def write_warheads(records, out_path: str) -> None:
+    """Write extracted warheads with normalized names suitable for Roshambo grouping.
+
+    Naming rules:
+    - Try to derive an integer index from parent name prefixes: mol_X, lig_X, pose_X.
+    - If found, set _Name to "mol_{X}_warhead_{ref_idx}" so OriginalName starts with mol_X.
+    - Otherwise, fallback to "{parent_name}_warhead_{ref_idx}".
+    - Keep provenance via properties: extracted_from, warhead_index, parent_*.
+    """
+    import re as _re
+
+    def _normalized_base(name: str) -> Optional[str]:
+        if not isinstance(name, str):
+            return None
+        m = _re.match(r'^(?:mol|lig|pose)_(\d+)', name)
+        if m:
+            return f"mol_{int(m.group(1))}"
+        # Handle names like lig_79:0:0 -> take the number after prefix before ':'
+        m2 = _re.match(r'^(?:mol|lig|pose)_(\d+):', name)
+        if m2:
+            return f"mol_{int(m2.group(1))}"
+        return None
+
     writer = Chem.SDWriter(out_path)
     for parent_name, frag, ref_idx, parent_props in records:
-        frag.SetProp("_Name", f"{parent_name}_warhead_{ref_idx}")
+        base = _normalized_base(parent_name)
+        if base:
+            new_name = f"{base}_warhead_{ref_idx}"
+        else:
+            new_name = f"{parent_name}_warhead_{ref_idx}"
+        frag.SetProp("_Name", new_name)
         frag.SetProp("extracted_from", parent_name)
         frag.SetProp("warhead_index", str(ref_idx))
+        if base:
+            frag.SetProp("normalized_base", base)
         for k, v in parent_props.items():
             frag.SetProp(f"parent_{k}", str(v))
         writer.write(frag)
