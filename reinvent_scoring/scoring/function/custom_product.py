@@ -25,13 +25,38 @@ class CustomProduct(BaseScoringFunction):
                 all_weights.append(summary.parameters.weight)
         return sum(all_weights)
 
-    def _compute_non_penalty_components(self, summaries: List[ComponentSummary], smiles: List[str]):
+    # def _compute_non_penalty_components(self, summaries: List[ComponentSummary], smiles: List[str]):
+    #     product = np.full(len(smiles), 1, dtype=np.float32)
+    #     all_weights = self._get_all_weights(summaries)
+
+    #     for summary in summaries:
+    #         if not self._component_is_penalty(summary):
+    #             comp_pow = self._calculate_pow(summary.total_score, summary.parameters.weight / all_weights)
+    #             product = product * comp_pow
+
+    #     return product
+    
+    def _compute_non_penalty_components(self, summaries: List["ComponentSummary"], smiles: List[str]):
         product = np.full(len(smiles), 1, dtype=np.float32)
         all_weights = self._get_all_weights(summaries)
 
+        # Handle zero or invalid weights
+        if np.any(all_weights == 0):
+            # logger.warning("Zero weights detected in _compute_non_penalty_components. Using epsilon fallback.")
+            safe_all_weights = np.where(all_weights == 0, np.finfo(np.float32).eps, all_weights)
+        else:
+            safe_all_weights = all_weights
+
         for summary in summaries:
             if not self._component_is_penalty(summary):
-                comp_pow = self._calculate_pow(summary.total_score, summary.parameters.weight / all_weights)
-                product = product * comp_pow
+                # Use safe weights to avoid division by zero
+                try:
+                    weight_ratio = summary.parameters.weight / safe_all_weights
+                except ZeroDivisionError:  # Shouldn't happen after replacement
+                    weight_ratio = summary.parameters.weight / np.finfo(np.float32).eps
+                    # logger.error("Unexpected ZeroDivisionError; forced epsilon fallback.")
+
+                comp_pow = self._calculate_pow(summary.total_score, weight_ratio)
+                product *= comp_pow
 
         return product
